@@ -7,9 +7,9 @@ const vscode_1 = require("vscode");
 const node_1 = require("vscode-languageclient/node");
 let client;
 function activate(context) {
-    const lsp = context.asAbsolutePath(path.join('client', 'bin', 'ca65-lsp' + process.platform == 'win32' ? '.exe' : ''));
-    const serverModule = 'lsp-devtools agent -- ' + lsp;
-    const serverOptions = { command: serverModule, transport: node_1.TransportKind.stdio, options: {
+    const exeName = 'ca65-lsp' + (process.platform == 'win32' ? '.exe' : '');
+    const lsp = context.asAbsolutePath(path.join('client', 'bin', exeName));
+    const serverOptions = { command: lsp, transport: node_1.TransportKind.stdio, options: {
             shell: true
         } };
     const clientOptions = {

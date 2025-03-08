@@ -11,13 +11,12 @@ import {
 let client: LanguageClient;
 
 export function activate(context: ExtensionContext) {
+    const exeName = 'ca65-lsp' + (process.platform == 'win32' ? '.exe' : '')
     const lsp = context.asAbsolutePath(
-        path.join('client', 'bin', 'ca65-lsp' + process.platform == 'win32' ? '.exe' : '')
+        path.join('client', 'bin', exeName)
     )
 
-    const serverModule = 'lsp-devtools agent -- ' + lsp
-
-    const serverOptions: ServerOptions = { command: serverModule, transport: TransportKind.stdio, options: {
+    const serverOptions: ServerOptions = { command: lsp, transport: TransportKind.stdio, options: {
         shell: true
     } }
 
