@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { workspace, ExtensionContext } from 'vscode';
+import { workspace, ExtensionContext, window, commands } from 'vscode';
 
 import {
     LanguageClient,
@@ -16,20 +16,44 @@ export function activate(context: ExtensionContext) {
         path.join('client', 'bin', exeName)
     )
 
-    const serverOptions: ServerOptions = { command: lsp, transport: TransportKind.stdio, options: {
-        shell: true
-    } }
+    function startServer() {
+        const command = workspace.getConfiguration('ca65').get<string>('lsp.path') ?? lsp;
+        const serverOptions: ServerOptions = { command, transport: TransportKind.stdio, options: {
+            shell: true
+        } }
+        
+        const clientOptions: LanguageClientOptions = {
+            documentSelector: [{ scheme: 'file', language: 'ca65' }],
+            synchronize: {
+                fileEvents: workspace.createFileSystemWatcher('**/nes.toml')
+            }
+        };
+        
+        client = new LanguageClient('ca65', 'ca65', serverOptions, clientOptions);
+        
+        client.start();
+    }
 
-    const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: 'file', language: 'ca65' }],
-        synchronize: {
-            fileEvents: workspace.createFileSystemWatcher('**/nes.toml')
+    workspace.onDidChangeConfiguration(async (event) => {
+        if (event.affectsConfiguration("ca65.lsp.path")) {
+            if (client) {
+                await client.stop();
+            }
+            startServer();
         }
-    };
+    });
 
-    client = new LanguageClient('ca65', 'ca65', serverOptions, clientOptions);
+    context.subscriptions.push(
+    commands.registerCommand('ca65.restartLanguageServer', async () => {
+      if (client) {
+        await client.stop();
+      }
+      startServer();
+      window.showInformationMessage('Language server restarted.');
+    })
+  );
 
-    client.start();
+    startServer();
 }
 
 export function deactivate(): Thenable<void> | undefined {

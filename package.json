@@ -1,6 +1,6 @@
 {
-  "name": "ca65-code",
-  "displayName": "ca65-code",
+  "name": "ca65",
+  "displayName": "CA65",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -24,20 +24,45 @@
           ],
           "default": "off",
           "description": "Traces the communication between VS Code and the language server."
+        },
+        "ca65.lsp.path": {
+          "scope": "window",
+          "type": "string",
+          "default": "",
+          "description": "Override path to LSP executable"
         }
       }
     },
-    "languages": [{
-      "id": "ca65",
-      "aliases": ["CA65 Assembly", "ca65"],
-      "extensions": [".s", ".asm", ".a65", ".inc", ".def"],
-      "configuration": "./language-configuration.json"
-    }],
-    "grammars": [{
-      "language": "ca65",
-      "scopeName": "source.asm6502",
-      "path": "./syntaxes/asm6502.tmLanguage"
-    }]
+    "languages": [
+      {
+        "id": "ca65",
+        "aliases": [
+          "CA65 Assembly",
+          "ca65"
+        ],
+        "extensions": [
+          ".s",
+          ".asm",
+          ".a65",
+          ".inc",
+          ".def"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "ca65",
+        "scopeName": "source.asm6502",
+        "path": "./syntaxes/asm6502.tmLanguage"
+      }
+    ],
+    "commands": [
+      {
+        "command": "ca65.restartLanguageServer",
+        "title": "Restart Language Server"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "bun run compile",
