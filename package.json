@@ -60,7 +60,7 @@
     "commands": [
       {
         "command": "ca65.restartLanguageServer",
-        "title": "Restart Language Server"
+        "title": "Restart CA65 Language Server"
       }
     ]
   },
