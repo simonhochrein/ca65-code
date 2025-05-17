@@ -9,17 +9,37 @@ let client;
 function activate(context) {
     const exeName = 'ca65-lsp' + (process.platform == 'win32' ? '.exe' : '');
     const lsp = context.asAbsolutePath(path.join('client', 'bin', exeName));
-    const serverOptions = { command: lsp, transport: node_1.TransportKind.stdio, options: {
-            shell: true
-        } };
-    const clientOptions = {
-        documentSelector: [{ scheme: 'file', language: 'ca65' }],
-        synchronize: {
-            fileEvents: vscode_1.workspace.createFileSystemWatcher('**/nes.toml')
+    function startServer() {
+        const command = vscode_1.workspace.getConfiguration('ca65').get('lsp.path') ?? lsp;
+        console.log(command);
+        const serverOptions = { command, transport: node_1.TransportKind.stdio, options: {
+                shell: true
+            } };
+        const clientOptions = {
+            documentSelector: [{ scheme: 'file', language: 'ca65' }],
+            synchronize: {
+                fileEvents: vscode_1.workspace.createFileSystemWatcher('**/nes.toml')
+            }
+        };
+        client = new node_1.LanguageClient('ca65', 'ca65', serverOptions, clientOptions);
+        client.start();
+    }
+    vscode_1.workspace.onDidChangeConfiguration(async (event) => {
+        if (event.affectsConfiguration("ca65.lsp.path")) {
+            if (client) {
+                await client.stop();
+            }
+            startServer();
         }
-    };
-    client = new node_1.LanguageClient('ca65', 'ca65', serverOptions, clientOptions);
-    client.start();
+    });
+    context.subscriptions.push(vscode_1.commands.registerCommand('ca65.restartLanguageServer', async () => {
+        if (client) {
+            await client.stop();
+        }
+        startServer();
+        vscode_1.window.showInformationMessage('Language server restarted.');
+    }));
+    startServer();
 }
 function deactivate() {
     if (!client) {
