@@ -5,7 +5,8 @@ import {
     LanguageClient,
     LanguageClientOptions,
     ServerOptions,
-    TransportKind
+    TransportKind,
+    WorkDoneProgress
 } from 'vscode-languageclient/node';
 
 let client: LanguageClient;
@@ -19,17 +20,24 @@ export function activate(context: ExtensionContext) {
     function startServer() {
         const command = workspace.getConfiguration('ca65').get<string>('lsp.path') ?? lsp;
         const serverOptions: ServerOptions = { command, transport: TransportKind.stdio, options: {
-            shell: true
+            shell: true,
+            env: {
+                RUST_BACKTRACE: 1
+            }
         } }
         
         const clientOptions: LanguageClientOptions = {
             documentSelector: [{ scheme: 'file', language: 'ca65' }],
             synchronize: {
                 fileEvents: workspace.createFileSystemWatcher('**/nes.toml')
-            }
+            },
         };
         
         client = new LanguageClient('ca65', 'ca65', serverOptions, clientOptions);
+
+        client.onProgress(WorkDoneProgress.type, "ca65", (params) => {
+            console.log(params);
+        })
         
         client.start();
     }
