@@ -37,8 +37,7 @@
       {
         "id": "ca65",
         "aliases": [
-          "CA65 Assembly",
-          "ca65"
+          "CA65 Assembly"
         ],
         "extensions": [
           ".s",
