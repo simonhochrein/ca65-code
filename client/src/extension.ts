@@ -29,7 +29,7 @@ export function activate(context: ExtensionContext) {
         const clientOptions: LanguageClientOptions = {
             documentSelector: [{ scheme: 'file', language: 'ca65' }],
             synchronize: {
-                fileEvents: workspace.createFileSystemWatcher('**/nes.toml')
+                fileEvents: workspace.createFileSystemWatcher('**/ca65.toml')
             },
         };
         
