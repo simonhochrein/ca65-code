@@ -1,0 +1,53 @@
+{
+  "name": "ca65-code",
+  "displayName": "ca65-code",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.98.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "./client/out/extension",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "ca65.trace.server": {
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the language server."
+        }
+      }
+    },
+    "languages": [{
+      "id": "ca65",
+      "aliases": ["CA65 Assembly", "ca65"],
+      "extensions": [".s", ".asm", ".a65", ".inc", ".def"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "ca65",
+      "scopeName": "source.asm6502",
+      "path": "./syntaxes/asm6502.tmLanguage"
+    }]
+  },
+  "scripts": {
+    "vscode:prepublish": "bun run compile",
+    "compile": "tsc -b",
+    "watch": "tsc -b -w",
+    "lint": "eslint",
+    "postinstall": "cd client && npm install",
+    "test": "sh ./scripts/e2e.sh"
+  },
+  "dependencies": {
+    "typescript": "^5.8.2"
+  }
+}
