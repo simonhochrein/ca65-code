@@ -70,19 +70,19 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>(\$)[A-Fa-f0-9]+\b</string>
+			<string>(\$)[A-Fa-f0-9_]+\b</string>
 			<key>name</key>
 			<string>constant.numeric.hex</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\%[01]+\b</string>
+			<string>\%[01_]+\b</string>
 			<key>name</key>
 			<string>constant.numeric.binary</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b[0-9]+\b</string>
+			<string>\b[0-9_]+\b</string>
 			<key>name</key>
 			<string>constant.numeric.decimal</string>
 		</dict>

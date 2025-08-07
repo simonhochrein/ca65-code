@@ -64,7 +64,7 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "bun run compile",
+    "vscode:prepublish": "tsc -b",
     "compile": "tsc -b",
     "watch": "tsc -b -w",
     "lint": "eslint",
